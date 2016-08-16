@@ -7,6 +7,8 @@ import datetime
 
 
 class FTPSync(object):
+    """FTP sync"""
+
 	def __init__(self):
 		self.host = 'ftp.gushenbbs.com'
 		self.user = 'gushenbbs170508'
@@ -14,12 +16,14 @@ class FTPSync(object):
 		self.local_dir = '/Users/tracy/workspace/stock/src/data'
 		self.conn = ftplib.FTP(self.host, self.user, self.password)
 		#远端FTP目录
-		self.conn.cwd('/') 
+		self.conn.cwd('/')
 		#本地下载目录
 		os.chdir(self.local_dir)
 
 	def get_dirs_files(self):
-		""" 得到当前目录和文件, 放入dir_res列表"""
+        """
+        Get catalogs and files, then adding to dir_res.
+        """
 		dir_res = []
 		files = list()
 		self.conn.dir('.', dir_res.append)
@@ -35,17 +39,25 @@ class FTPSync(object):
 		return (files, dirs)
 
 	def walk(self, next_dir):
+        """
+        Sync files from ftp server.
+
+        :param next_dir: the next dir downloaded.
+        """
 		self.conn.cwd(next_dir)
+
 		try:
 			os.mkdir(next_dir)
 		except OSError:
 			pass
-		os.chdir(next_dir)
+
+        os.chdir(next_dir)
 
 		ftp_curr_dir = self.conn.pwd()
 		local_curr_dir = os.getcwd()
 
 		files, dirs = self.get_dirs_files()
+
 		for f in files:
 			outf = open(f, 'wb')
 			try:
