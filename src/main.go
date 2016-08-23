@@ -22,5 +22,9 @@ func main(){
 	fmt.Println("middle", statistics["middle"])
 	fmt.Println("small", statistics["small"])
 	fmt.Println("total", statistics["total"])
+<<<<<<< HEAD
     ftp.Run()
+=======
+  ftp.Run()
+>>>>>>> 5d2447946630a55d7e0521c00cf28aaf3313fadc
 }
