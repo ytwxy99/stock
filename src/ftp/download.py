@@ -3,6 +3,7 @@
 import os
 import sys
 import ftplib
+import datetime
 
 
 class FTPSync(object):
@@ -10,7 +11,8 @@ class FTPSync(object):
 		self.host = 'ftp.gushenbbs.com'
 		self.user = 'gushenbbs170508'
 		self.password = 'gushenbbs170508'
-		self.local_dir = '/Users/tracy/workspace/stock/src/data'
+		#self.local_dir = '/Users/tracy/workspace/stock/src/data'
+		self.local_dir = '/tmp/data'
 		self.conn = ftplib.FTP(self.host, self.user, self.password)
 		#远端FTP目录
 		self.conn.cwd('/') 
@@ -23,7 +25,6 @@ class FTPSync(object):
 		files = list()
 		self.conn.dir('.', dir_res.append)
 		files_tmp = [f for f in dir_res if 'csv' in f]
-		print files_tmp
 		for file in files_tmp:
 			files.append([f for f in file.split(' ') if f != '' ][3])
 		dirs = list()
@@ -32,11 +33,9 @@ class FTPSync(object):
 				dirs.append([d for d in dir.split(' ') if d != '' and ('.' not in d)][3])
 			except:
 				pass
-		print files
 		return (files, dirs)
 
 	def walk(self, next_dir):
-		print 'Walking to', next_dir
 		self.conn.cwd(next_dir)
 		try:
 			os.mkdir(next_dir)
@@ -48,10 +47,7 @@ class FTPSync(object):
 		local_curr_dir = os.getcwd()
 
 		files, dirs = self.get_dirs_files()
-		print "FILES: ", files
-		print "DIRS: ", dirs
 		for f in files:
-			print next_dir, ':', f
 			outf = open(f, 'wb')
 			try:
 				self.conn.retrbinary('RETR %s' % f, outf.write)
@@ -62,12 +58,15 @@ class FTPSync(object):
 			self.conn.cwd(ftp_curr_dir)
 			self.walk(d)
 
-	def run(self):
-		self.walk('.')
+	def run(self, date_time='.'):
+		self.walk(date_time)
 
-def main():
+def main(date_time):
     f = FTPSync()
-    f.run()
+    f.run(date_time)
 
 if __name__ == '__main__':
-	main()
+    # 下载当天数据
+    #date_time = datetime.datetime.now().strftime('%Y%m%d %H:%M:%S').split(' ')[0]
+	#main(date_time)
+    print "ok"
