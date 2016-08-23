@@ -4,6 +4,7 @@ import (
         "fmt"
         "tools"
         "compute"
+        "ftp"
 )
 
 func main(){
@@ -21,4 +22,5 @@ func main(){
 	fmt.Println("middle", statistics["middle"])
 	fmt.Println("small", statistics["small"])
 	fmt.Println("total", statistics["total"])
+    ftp.Run()
 }
